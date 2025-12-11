@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-black">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Stack Threads Creator</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        black: {
+                            DEFAULT: '#000000',
+                            900: '#050505',
+                            800: '#0a0a0a',
+                        },
+                        neon: {
+                            red: '#FF0033',
+                            dim: '#99001f',
+                        },
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'cyber-grid': 'linear-gradient(transparent 0%, rgba(255, 0, 51, 0.1) 2%, transparent 5%), linear-gradient(90deg, transparent 0%, rgba(255, 0, 51, 0.1) 2%, transparent 5%)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'scan-light': 'scan-light 3s linear infinite',
+                        'scroll-right': 'scroll-right 40s linear infinite',
+                        'atomic-pulse': 'atomic-pulse 2s infinite', /* Synced Duration */
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        'scan-light': {
+                            '0%': { left: '-100%' },
+                            '100%': { left: '200%' },
+                        },
+                        'scroll-right': {
+                            '0%': { transform: 'translateX(-50%)' },
+                            '100%': { transform: 'translateX(0)' },
+                        },
+                        'atomic-pulse': {
+                            '0%': { boxShadow: '0 0 20px rgba(255, 0, 51, 0.5)' },
+                            '50%': { boxShadow: '0 0 50px rgba(255, 0, 51, 0.9), 0 0 20px rgba(255, 255, 255, 0.5)' },
+                            '100%': { boxShadow: '0 0 20px rgba(255, 0, 51, 0.5)' },
+                        }
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(255, 0, 51, 0.4)',
+                        'neon-strong': '0 0 40px rgba(255, 0, 51, 0.6), inset 0 0 20px rgba(255, 0, 51, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .scanline-overlay {
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.5) 3px, rgba(0, 0, 0, 0.5) 4px);
+            pointer-events: none;
+            z-index: 90;
+            opacity: 0.1;
+        }
+
+        .hyper-glass {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 0, 51, 0.2);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+        }
+        
+        .hyper-glass:hover {
+             border-color: rgba(255, 0, 51, 0.5);
+             box-shadow: 0 10px 40px -10px rgba(255, 0, 51, 0.2), inset 0 0 20px rgba(255, 0, 51, 0.1);
+        }
+
+        .text-glow { text-shadow: 0 0 15px rgba(255, 0, 51, 0.6); }
+        .text-glow-white { text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+
+        /* NEW ATOMIC CTA BUTTON */
+        .btn-atomic {
+            position: relative;
+            background: linear-gradient(90deg, #FF0033, #D9002B);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .btn-atomic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transition: 0.6s;
+            z-index: -1;
+        }
+
+        .btn-atomic:hover::before {
+            left: 100%;
+        }
+
+        .btn-atomic:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+
+        /* AUTO-ANIMATING LUXURY TEXT FOR "THREADS" */
+        @keyframes luxury-breath {
+            0%, 100% {
+                color: #d4d4d8; /* zinc-300 (Gray) */
+                text-shadow: none;
+                transform: scale(1);
+            }
+            50% {
+                color: #ffffff; /* White */
+                text-shadow: 0 0 25px rgba(255, 255, 255, 0.8); /* Glow */
+                transform: scale(1.03); /* Subtle Lift */
+            }
+        }
+
+        .simple-luxury-text {
+            display: inline-block;
+            cursor: default;
+            /* Synced Duration: 2s (Matches Button) */
+            animation: luxury-breath 2s ease-in-out infinite; 
+        }
+
+        /* Smooth Text Selection */
+        ::selection { background: #FF0033; color: white; }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <div class="scanline-overlay"></div>
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-[-20%] left-0 w-full h-[800px] bg-gradient-radial from-neon-red/20 via-black to-black animate-pulse-slow"></div>
+        <div class="absolute inset-0 bg-cyber-grid bg-[length:50px_50px] opacity-20 mix-blend-overlay"></div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 border-b border-white/10 bg-black/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="assets/threads-logo.png" alt="Threads Logo" class="w-10 h-10 rounded-xl border border-white/20 shadow-neon">
+                <span class="font-display font-bold text-xl tracking-wider text-white uppercase">Full-Stack Threads Creator</span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative z-10 pt-48 pb-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            
+            <div class="inline-flex items-center gap-3 mb-12 px-4 py-2 rounded-full border border-neon-red/30 bg-black/40 backdrop-blur-md">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-red opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-neon-red"></span>
+                </span>
+                <span class="text-xs font-bold tracking-[0.2em] text-white uppercase">Updated For 2026 Algorithm</span>
+            </div>
+
+            <h1 class="font-display font-black text-5xl sm:text-6xl md:text-7xl text-white/90 mb-8 leading-[1.2] uppercase tracking-tight max-w-6xl mx-auto">
+                Go From 0 to <span class="text-neon-red text-glow">10K Followers</span>
+                <br class="hidden md:block" />
+                & Start Making <span class="text-white text-glow-white">$100+/Day</span>
+                <br class="hidden md:block" />
+                With 
+                <span class="simple-luxury-text">Threads</span>
+            </h1>
+
+            <h2 class="text-xl md:text-2xl text-gray-300 font-light max-w-3xl mx-auto mb-12 leading-relaxed">
+                Use My Proven System I Used to Build a 4-Fig Threads Business All While Working Just <span class="text-white font-bold border-b border-neon-red">2 Hours Per Day</span> <br class="hidden md:block"> (Even With ZERO Experience)
+            </h2>
+
+            <div class="flex justify-center mb-24">
+                <a href="#pricing" class="btn-atomic animate-atomic-pulse px-12 py-6 text-lg font-bold tracking-[0.2em] text-white rounded-sm">
+                    GET INSTANT ACCESS
+                </a>
+            </div>
+
+            <div class="relative w-full max-w-5xl mx-auto group">
+                <img 
+                    src="assets/hero-bundle.png" 
+                    alt="Luxury Interface" 
+                    class="relative z-10 w-full h-auto object-contain drop-shadow-2xl transition duration-700 ease-out"
+                >
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-20 py-12 bg-black border-y border-white/5 overflow-hidden">
+        <div class="flex gap-8 w-[200%] animate-scroll-right hover:pause">
+            <div class="flex gap-8 shrink-0 items-center">
+                <div class="hyper-glass p-6 w-80 rounded-xl shrink-0">
+                    <p class="text-gray-400 text-sm mb-4">"Matyas went from 1,000 to 11K followers in just 2 weeks! Unbelievable."</p>
+                    <div class="text-neon-red text-xs font-bold uppercase">Customer 1</div>
+                </div>
+                <div class="hyper-glass p-6 w-80 rounded-xl shrink-0">
+                    <p class="text-gray-400 text-sm mb-4">"The monetization module paid for the course in 48 hours."</p>
+                    <div class="text-neon-red text-xs font-bold uppercase">Customer 2</div>
+                </div>
+                <div class="hyper-glass p-6 w-80 rounded-xl shrink-0">
+                    <p class="text-gray-400 text-sm mb-4">"Finally a system that doesn't require me to dance on video."</p>
+                    <div class="text-neon-red text-xs font-bold uppercase">Customer 3</div>
+                </div>
+                <div class="hyper-glass p-6 w-80 rounded-xl shrink-0">
+                    <p class="text-gray-400 text-sm mb-4">"My engagement shot up 400% after using the hook database."</p>
+                    <div class="text-neon-red text-xs font-bold uppercase">Customer 4</div>
+                </div>
+            </div>
+            <div class="flex gap-8 shrink-0 items-center">
+                <div class="hyper-glass p-6 w-80 rounded-xl shrink-0">
+                    <p class="text-gray-400 text-sm mb-4">"Matyas went from 1,000 to 11K followers in just 2 weeks! Unbelievable."</p>
+                    <div class="text-neon-red text-xs font-bold uppercase">Customer 1</div>
+                </div>
+                <div class="hyper-glass p-6 w-80 rounded-xl shrink-0">
+                    <p class="text-gray-400 text-sm mb-4">"The monetization module paid for the course in 48 hours."</p>
+                    <div class="text-neon-red text-xs font-bold uppercase">Customer 2</div>
+                </div>
+                <div class="hyper-glass p-6 w-80 rounded-xl shrink-0">
+                    <p class="text-gray-400 text-sm mb-4">"Finally a system that doesn't require me to dance on video."</p>
+                    <div class="text-neon-red text-xs font-bold uppercase">Customer 3</div>
+                </div>
+                <div class="hyper-glass p-6 w-80 rounded-xl shrink-0">
+                    <p class="text-gray-400 text-sm mb-4">"My engagement shot up 400% after using the hook database."</p>
+                    <div class="text-neon-red text-xs font-bold uppercase">Customer 4</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-10 py-32 bg-black">
+        <div class="max-w-5xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-display font-black text-white text-center mb-16 uppercase">Is This You?</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="hyper-glass p-8 rounded-xl flex items-start gap-4 group">
+                    <div class="mt-1 p-1 bg-neon-red/20 rounded border border-neon-red/50 group-hover:bg-neon-red group-hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-4 h-4 text-neon-red group-hover:text-white"></i>
+                    </div>
+                    <p class="text-gray-300 font-medium">You want to write online but don't know how.</p>
+                </div>
+
+                <div class="hyper-glass p-8 rounded-xl flex items-start gap-4 group">
+                     <div class="mt-1 p-1 bg-neon-red/20 rounded border border-neon-red/50 group-hover:bg-neon-red group-hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-4 h-4 text-neon-red group-hover:text-white"></i>
+                    </div>
+                    <p class="text-gray-300 font-medium">You're unsure how to grow your brand on Threads.</p>
+                </div>
+
+                <div class="hyper-glass p-8 rounded-xl flex items-start gap-4 group">
+                     <div class="mt-1 p-1 bg-neon-red/20 rounded border border-neon-red/50 group-hover:bg-neon-red group-hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-4 h-4 text-neon-red group-hover:text-white"></i>
+                    </div>
+                    <p class="text-gray-300 font-medium">You’ve been posting for weeks but see no growth in followers.</p>
+                </div>
+
+                <div class="hyper-glass p-8 rounded-xl flex items-start gap-4 group">
+                     <div class="mt-1 p-1 bg-neon-red/20 rounded border border-neon-red/50 group-hover:bg-neon-red group-hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-4 h-4 text-neon-red group-hover:text-white"></i>
+                    </div>
+                    <p class="text-gray-300 font-medium">You want to build a real online business that makes $100+/day.</p>
+                </div>
+
+                <div class="hyper-glass p-8 rounded-xl flex items-start gap-4 group">
+                     <div class="mt-1 p-1 bg-neon-red/20 rounded border border-neon-red/50 group-hover:bg-neon-red group-hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-4 h-4 text-neon-red group-hover:text-white"></i>
+                    </div>
+                    <p class="text-gray-300 font-medium">You have no idea what to post and struggle to come up with content ideas.</p>
+                </div>
+
+                 <div class="hyper-glass p-8 rounded-xl flex items-start gap-4 group">
+                     <div class="mt-1 p-1 bg-neon-red/20 rounded border border-neon-red/50 group-hover:bg-neon-red group-hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-4 h-4 text-neon-red group-hover:text-white"></i>
+                    </div>
+                    <p class="text-gray-300 font-medium">You waste 10+ hours every week creating content that gets no engagement.</p>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center">
+                <p class="text-2xl text-white font-bold mb-6">If so, this course is for you.</p>
+                <p class="text-gray-500 text-sm uppercase tracking-widest">If not, you can leave this page.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-10 py-32 bg-gradient-to-b from-black to-zinc-900 border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h3 class="text-3xl md:text-5xl font-display font-black text-white mb-10 leading-tight">
+                If you’re not growing your audience on Threads, <br />
+                <span class="text-neon-red text-glow">you’ll get left behind...</span>
+            </h3>
+            
+            <div class="space-y-6 text-lg md:text-xl text-gray-300 font-light leading-relaxed">
+                <p>Remember how early creators went hard on <strong class="text-white">TikTok in 2020?</strong></p>
+                <p>Or those who built audiences on <strong class="text-white">Twitter in 2015?</strong></p>
+                <p class="text-white font-bold italic">They’re laughing now.</p>
+                
+                <div class="w-24 h-[1px] bg-neon-red/50 mx-auto my-8"></div>
+                
+                <p>But most people still ignore Threads.</p>
+                <p class="text-white text-2xl font-bold">That’s why it works.</p>
+                <p>They’ll realize its potential when it’s already crowded.</p>
+                <p class="text-neon-red font-black text-3xl uppercase tracking-widest my-8">But not you.</p>
+                
+                <p>By the time most people show up, you’ll already have the foundations built.</p>
+                <p class="text-white">All you have to do is start now.</p>
+            </div>
+
+            <div class="mt-16">
+                 <a href="#pricing" class="btn-atomic animate-atomic-pulse px-12 py-5 text-lg font-bold tracking-[0.2em] text-white rounded-sm inline-block">
+                    GET INSTANT ACCESS
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-10 py-32 bg-black">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-display font-black text-white mb-6 uppercase">Everything You Need to <br><span class="text-neon-red">Dominate Threads</span></h2>
+                <p class="text-xl text-gray-400">A complete system, not just another course.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="hyper-glass p-10 rounded-2xl">
+                    <h3 class="text-2xl font-bold text-white mb-6">It's My 10K Threads Creator Blueprint.</h3>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        I’ve spent the past year mastering Threads, testing what works, and developing a step-by-step system that turns complete beginners into thriving creators.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                        This isn’t just random tips or recycled advice. The Exact System I Used to Get My First 10K Followers, Generate 10+ Million Views, and Monetize My Audience.
+                    </p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 p-4 border border-white/5 rounded-lg bg-white/5">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-neon-red"></i>
+                        <span class="text-white font-bold">Profile Optimization Secrets</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 border border-white/5 rounded-lg bg-white/5">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-neon-red"></i>
+                        <span class="text-white font-bold">Infinite Content Generator</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 border border-white/5 rounded-lg bg-white/5">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-neon-red"></i>
+                        <span class="text-white font-bold">Viral Hook Database</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 border border-white/5 rounded-lg bg-white/5">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-neon-red"></i>
+                        <span class="text-white font-bold">Monetization Frameworks</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="relative z-10 py-32 bg-black border-t border-white/10">
+        <div class="absolute inset-0 bg-gradient-radial from-neon-red/10 to-transparent pointer-events-none"></div>
+
+        <div class="max-w-3xl mx-auto px-6 relative z-10">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-display font-black text-white mb-4 uppercase">Start Building Your <br><span class="text-neon-red">Threads Empire</span></h2>
+                <p class="text-gray-400 text-lg">Everything you need to go from zero to profitable creator</p>
+            </div>
+
+            <div class="hyper-glass p-12 md:p-16 rounded-3xl relative overflow-hidden text-center shadow-neon-strong border-t-2 border-neon-red">
+                
+                <div class="inline-block bg-neon-red/20 border border-neon-red/50 text-neon-red px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-10">
+                    Lifetime Access
+                </div>
+
+                <div class="flex flex-col items-center justify-center gap-2 mb-12">
+                    <span class="text-gray-500 text-2xl line-through decoration-neon-red decoration-2 font-bold">$197</span>
+                    <span class="text-8xl font-black text-white tracking-tighter text-glow-white">$97</span>
+                    <span class="text-gray-400 text-sm">One-time payment</span>
+                </div>
+
+                <a href="checkout.html" class="block w-full py-6 text-xl font-bold tracking-[0.2em] text-white uppercase btn-atomic animate-atomic-pulse rounded-sm mb-8">
+                    GET INSTANT ACCESS
+                </a>
+
+                <div class="flex items-center justify-center gap-6 text-xs text-gray-500 font-mono tracking-widest uppercase">
+                    <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-neon-red"></i> Secure Checkout</span>
+                    <span class="flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4 text-neon-red"></i> Instant Delivery</span>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center border-t border-white/5 pt-10">
+                <p class="text-xl italic text-gray-300 mb-4">"Stop watching others build massive followings while you struggle to get traction. You're one proven system away from turning Threads into your most profitable platform."</p>
+                <p class="text-neon-red font-bold uppercase tracking-widest text-sm">— Matyas, Threads Creator</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 bg-black text-center text-gray-600 text-xs tracking-widest uppercase border-t border-white/5">
+        &copy; 2026 Full-Stack Threads Creator. All Rights Reserved.
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

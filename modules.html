@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Stack Threads Creator | Curriculum</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        neon: { DEFAULT: '#FF0033', dim: '#99001f' },
+                        surface: { 50: '#0A0A0A', 100: '#121212', 200: '#1E1E1E' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #000000; color: #ffffff; }
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .glow-text { text-shadow: 0 0 20px rgba(255, 0, 51, 0.5); }
+        .glow-box { box-shadow: 0 0 40px -10px rgba(255, 0, 51, 0.2); }
+        
+        /* Custom Accordion Styling */
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        
+        details[open] summary ~ * { animation: sweep .3s ease-in-out; }
+        
+        @keyframes sweep {
+            0%    {opacity: 0; transform: translateY(-10px)}
+            100%  {opacity: 1; transform: translateY(0)}
+        }
+
+        .timeline-line {
+            background: linear-gradient(to bottom, transparent, #FF0033, #FF0033, transparent);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-neon selection:text-white pb-20">
+
+    <div class="noise-overlay"></div>
+
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-neon/10 blur-[120px] rounded-full opacity-30"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-neon/5 blur-[100px] rounded-full opacity-20"></div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-40 border-b border-white/5 bg-black/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                <div class="w-8 h-8 bg-neon rounded-lg flex items-center justify-center text-white font-bold">@</div>
+                <span class="font-bold text-lg tracking-tight">Full-Stack<span class="text-neon">Threads</span></span>
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="text-sm font-medium text-gray-400 hover:text-white transition hidden md:block">Back to Home</a>
+                <a href="checkout.html" class="px-5 py-2 text-sm font-bold bg-neon text-white rounded-full hover:bg-red-600 transition shadow-[0_0_15px_rgba(255,0,51,0.4)]">
+                    Get Access $97
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative z-10 pt-32 pb-16 text-center px-6">
+        <div class="inline-block px-3 py-1 border border-neon/30 rounded-full bg-neon/10 text-neon text-xs font-mono mb-6">
+            // THE BLUEPRINT
+        </div>
+        <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-4">
+            System <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Architecture</span>
+        </h1>
+        <p class="text-gray-400 max-w-xl mx-auto">
+            4 Core Modules. 28 Video Lessons. The exact step-by-step installation process for your creator business.
+        </p>
+    </header>
+
+    <main class="relative z-10 max-w-4xl mx-auto px-6">
+        
+        <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-px timeline-line -translate-x-1/2 hidden md:block"></div>
+
+        <div class="space-y-12">
+
+            <div class="relative md:grid md:grid-cols-2 gap-12 items-start">
+                <div class="absolute left-1/2 top-8 w-4 h-4 bg-black border-2 border-neon rounded-full -translate-x-1/2 z-20 shadow-[0_0_15px_rgba(255,0,51,0.8)] hidden md:block"></div>
+                
+                <div class="md:text-right md:pt-4">
+                    <span class="text-neon font-mono text-sm font-bold">MODULE 01</span>
+                    <h2 class="text-2xl font-bold text-white mb-2">The AI Writing Core</h2>
+                    <p class="text-gray-500 text-sm">Calibration & Voice Cloning</p>
+                </div>
+
+                <details class="group bg-surface-100/50 backdrop-blur border border-white/10 rounded-xl overflow-hidden hover:border-neon/30 transition duration-300">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-white/5 p-2 rounded text-white group-hover:text-neon transition"><i data-lucide="bot" class="w-5 h-5"></i></div>
+                            <span class="font-bold">View Curriculum (5 Lessons)</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition"></i>
+                    </summary>
+                    <div class="p-6 pt-0 border-t border-white/5 bg-black/20">
+                        <ul class="space-y-4 mt-4">
+                            <li class="flex items-center gap-3 text-sm text-gray-400">
+                                <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                <span>1.1 The "Ghostwriter" Prompt Chain</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-gray-400">
+                                <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                <span>1.2 Training ChatGPT on your specific voice</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-gray-400">
+                                <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                <span>1.3 Generating 50 hooks in 30 seconds</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-gray-400">
+                                <i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>
+                                <span class="text-white">Resource: The Master Prompt Library PDF</span>
+                            </li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <div class="relative md:grid md:grid-cols-2 gap-12 items-start">
+                <div class="absolute left-1/2 top-8 w-4 h-4 bg-black border-2 border-neon rounded-full -translate-x-1/2 z-20 hidden md:block"></div>
+                
+                <div class="md:order-2 md:pt-4">
+                    <span class="text-neon font-mono text-sm font-bold">MODULE 02</span>
+                    <h2 class="text-2xl font-bold text-white mb-2">The Content OS</h2>
+                    <p class="text-gray-500 text-sm">Notion Architecture & Asset Management</p>
+                </div>
+
+                <div class="md:order-1">
+                    <details class="group bg-surface-100/50 backdrop-blur border border-white/10 rounded-xl overflow-hidden hover:border-neon/30 transition duration-300">
+                        <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-white/5 p-2 rounded text-white group-hover:text-neon transition"><i data-lucide="layout-grid" class="w-5 h-5"></i></div>
+                                <span class="font-bold">View Curriculum (4 Lessons)</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition"></i>
+                        </summary>
+                        <div class="p-6 pt-0 border-t border-white/5 bg-black/20">
+                            <ul class="space-y-4 mt-4">
+                                <li class="flex items-center gap-3 text-sm text-gray-400">
+                                    <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                    <span>2.1 Setting up the Notion Dashboard</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-gray-400">
+                                    <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                    <span>2.2 The "Idea Capture" Workflow</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-gray-400">
+                                    <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                    <span>2.3 Visual Asset Management</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-gray-400">
+                                    <i data-lucide="download" class="w-4 h-4 text-green-400"></i>
+                                    <span class="text-white">Download: Full-Stack OS Template</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="relative md:grid md:grid-cols-2 gap-12 items-start">
+                <div class="absolute left-1/2 top-8 w-4 h-4 bg-black border-2 border-neon rounded-full -translate-x-1/2 z-20 hidden md:block"></div>
+                
+                <div class="md:text-right md:pt-4">
+                    <span class="text-neon font-mono text-sm font-bold">MODULE 03</span>
+                    <h2 class="text-2xl font-bold text-white mb-2">Growth Mechanics</h2>
+                    <p class="text-gray-500 text-sm">Algorithm Hacking & Engagement</p>
+                </div>
+
+                <details class="group bg-surface-100/50 backdrop-blur border border-white/10 rounded-xl overflow-hidden hover:border-neon/30 transition duration-300">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-white/5 p-2 rounded text-white group-hover:text-neon transition"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
+                            <span class="font-bold">View Curriculum (6 Lessons)</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition"></i>
+                    </summary>
+                    <div class="p-6 pt-0 border-t border-white/5 bg-black/20">
+                        <ul class="space-y-4 mt-4">
+                            <li class="flex items-center gap-3 text-sm text-gray-400">
+                                <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                <span>3.1 The "Reply Guy" Strategy (That actually works)</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-gray-400">
+                                <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                <span>3.2 Understanding Thread Velocity</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-gray-400">
+                                <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                <span>3.3 Leveraging Cross-Platform Traffic</span>
+                            </li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+             <div class="relative md:grid md:grid-cols-2 gap-12 items-start">
+                <div class="absolute left-1/2 top-8 w-4 h-4 bg-black border-2 border-neon rounded-full -translate-x-1/2 z-20 hidden md:block"></div>
+                
+                <div class="md:order-2 md:pt-4">
+                    <span class="text-neon font-mono text-sm font-bold">MODULE 04</span>
+                    <h2 class="text-2xl font-bold text-white mb-2">Monetization</h2>
+                    <p class="text-gray-500 text-sm">The $10k/Month Blueprint</p>
+                </div>
+
+                <div class="md:order-1">
+                    <details class="group bg-surface-100/50 backdrop-blur border border-white/10 rounded-xl overflow-hidden hover:border-neon/30 transition duration-300">
+                        <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-white/5 p-2 rounded text-white group-hover:text-neon transition"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
+                                <span class="font-bold">View Curriculum (3 Lessons)</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition"></i>
+                        </summary>
+                        <div class="p-6 pt-0 border-t border-white/5 bg-black/20">
+                            <ul class="space-y-4 mt-4">
+                                <li class="flex items-center gap-3 text-sm text-gray-400">
+                                    <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                    <span>4.1 Building a Newsletter Magnet</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-gray-400">
+                                    <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                    <span>4.2 Creating your first Digital Product</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-gray-400">
+                                    <i data-lucide="play-circle" class="w-4 h-4 text-neon"></i>
+                                    <span>4.3 The "Soft Launch" Timeline</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-24 text-center pb-20">
+            <div class="p-8 rounded-2xl bg-gradient-to-b from-surface-100 to-black border border-white/10 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon to-transparent"></div>
+                <h3 class="text-2xl font-bold mb-4">Ready to install the system?</h3>
+                <p class="text-gray-400 mb-8 max-w-lg mx-auto">Get instant access to all 4 modules, the prompt library, and the Notion OS template today.</p>
+                <a href="checkout.html" class="inline-block px-8 py-4 rounded-full bg-neon text-white font-bold text-lg hover:scale-105 transition duration-300 shadow-[0_0_20px_rgba(255,0,51,0.5)]">
+                    Get Instant Access
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
